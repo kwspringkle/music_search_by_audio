@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset='UTF-8'>
+        <title>Search Result</title>
+    </head>
+
+    <body>
+        <h1>Search Result</h1>
+        {% if result and result.result %}
+        <h2>Found!</h2>
+        <p>Artist: {{ result.result.artist }}</p>
+        <p>Title: {{ result.result.title }}</p>
+        <p>Album: {{ result.result.album }}</p>
+        <p>Link: <a href="{{ result.result.song_link }}" target="_blank">Click here to listen</a></p>
+        {% else %}
+        <h2>No song found!</h2>
+        {% endif %}
+    </body>
+</html>

@@ -38,23 +38,7 @@ def search(request, audio_path):
         files['file'].close()
         
         print(result.text)
-        return JsonResponse(result.json())
+        return render(request, 'search_result.html', {'result': result.json()})
     
     except FileNotFoundError:
         return JsonResponse({'error': 'File not found.'}, status=404)
-    try:
-        data = {
-            'api_token': API_KEY,
-            'return': 'apple_music, spotify',
-        }
-        files = {
-            'file': open(audio_path, 'rb')  
-        }
-        result = requests.post('https://api.audd.io/', data=data, files=files)
-        files['file'].close()  
-        print(result.text)
-        return JsonResponse(result.json())
-
-    except FileNotFoundError:
-        return JsonResponse({'error': 'File not found.'}, status=404)
-
