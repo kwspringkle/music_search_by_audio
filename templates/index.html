@@ -1,18 +1,69 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Music Search</title>
-        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
-    </head>
-    <body>
-        <h1>Upload Audio</h1>
-        <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="audio_file">Select Audio File:</label>
-            <input type="file" name="audio_file" accept="audio/*">
-            <button type="submit">Upload</button>
-        </form>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Search</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+</head>
+<body>
+    <h1>Upload or Record Audio</h1>
+
+    <!-- Form for uploading audio -->
+    <h2>Upload Audio File</h2>
+    <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="audio_file">Select Audio File:</label>
+        <input type="file" name="audio_file" accept="audio/*">
+        <button type="submit">Upload</button>
+    </form>
+
+    <!-- Section for recording audio -->
+    <h2>Record Audio</h2>
+    <button id="start-recording">Start Recording</button>
+    <button id="stop-recording" disabled>Stop Recording</button>
+    <p id="recording-status"></p>
+
+    <form id="recorded-audio-form" action="{% url 'record' %}" method="post" enctype="multipart/form-data" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="recorded_audio_name" value="Recorded Audio">
+        <input type="file" id="recorded-audio-file" name="audio_file">
+        <button type="submit" id="submit-recording">Submit Recorded Audio</button>
+    </form>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+
+        document.getElementById('start-recording').addEventListener('click', function() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                document.getElementById('recording-status').textContent = 'Recording...';
+                document.getElementById('stop-recording').disabled = false;
+
+                mediaRecorder.ondataavailable = function(event) {
+                    recordedChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = function() {
+                    const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+                    const file = new File([blob], 'recorded_audio.wav', { type: 'audio/wav' });
+                    const fileInput = document.getElementById('recorded-audio-file');
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    document.getElementById('recording-status').textContent = 'Recording complete. Ready to submit.';
+                    document.getElementById('recorded-audio-form').style.display = 'block';
+                };
+            });
+        });
+
+        document.getElementById('stop-recording').addEventListener('click', function() {
+            mediaRecorder.stop();
+            document.getElementById('stop-recording').disabled = true;
+        });
+    </script>
+</body>
 </html>
