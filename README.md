@@ -18,7 +18,7 @@ To run the project:
 python manage.py runserver
 ```
 
-The prototype frontend and recommend function  haven't finished yet, I will improve them in the near future. You can refer to the UI design [here](https://www.figma.com/design/h1fH7ZpEF4jJccuMKiU2GD/CocCoc's-Music-Search-Prototype-UI-Design?node-id=0-1&t=UzICBwVg0fZ3ln7F-1)
+The prototype frontend and recommend function  haven't finished yet, I will improve this project in the near future. You can refer to the UI design [here](https://www.figma.com/design/h1fH7ZpEF4jJccuMKiU2GD/CocCoc's-Music-Search-Prototype-UI-Design?node-id=0-1&t=UzICBwVg0fZ3ln7F-1)
 
 
 
